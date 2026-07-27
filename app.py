@@ -195,10 +195,12 @@ with st.sidebar:
     max_burden = st.number_input("월 금융부담 한도 (만원)",min_value=10,   max_value=500,   value=100,   step=10)  * 10_000
 
     st.markdown("---")
+    OPTS = ["임대료", "유동인구", "경쟁 점포", "매장 면적", "수익성"]
     priority = st.multiselect(
         "중요하게 생각하는 조건을 선택하세요",
-        ["임대료", "유동인구", "경쟁 점포", "매장 면적", "수익성"],
+        options=OPTS,
         default=["임대료", "유동인구", "경쟁 점포"],
+        key="priority_v3",
     )
 
     st.markdown("---")
