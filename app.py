@@ -34,11 +34,125 @@ st.set_page_config(
     layout="wide",
 )
 
+# ─── KB 브랜드 커스텀 CSS ─────────────────────────────────────
+st.markdown("""
+<style>
+/* KB 컬러 변수 */
+:root {
+    --kb-yellow: #FFB800;
+    --kb-dark:   #1A1A1A;
+    --kb-light:  #FFF8E7;
+    --kb-gray:   #F5F5F5;
+}
+
+/* 전체 배경 */
+.stApp { background-color: #FFFFFF; }
+
+/* 사이드바 */
+[data-testid="stSidebar"] {
+    background-color: #1A1A1A !important;
+}
+[data-testid="stSidebar"] * {
+    color: #FFFFFF !important;
+}
+[data-testid="stSidebar"] .stSelectbox label,
+[data-testid="stSidebar"] .stNumberInput label,
+[data-testid="stSidebar"] .stMultiSelect label {
+    color: #FFD966 !important;
+    font-weight: 600;
+}
+
+/* 메인 타이틀 */
+h1 { color: #1A1A1A !important; border-bottom: 3px solid #FFB800; padding-bottom: 8px; }
+h2 { color: #1A1A1A !important; }
+h3 { color: #333333 !important; }
+
+/* Primary 버튼 → KB 노랑 */
+.stButton > button[kind="primary"] {
+    background-color: #FFB800 !important;
+    color: #1A1A1A !important;
+    font-weight: 700;
+    border: none;
+    border-radius: 6px;
+}
+.stButton > button[kind="primary"]:hover {
+    background-color: #E6A600 !important;
+}
+
+/* 탭 */
+.stTabs [data-baseweb="tab-list"] {
+    border-bottom: 2px solid #FFB800;
+}
+.stTabs [aria-selected="true"] {
+    background-color: #FFB800 !important;
+    color: #1A1A1A !important;
+    font-weight: 700;
+    border-radius: 6px 6px 0 0;
+}
+
+/* 메트릭 카드 */
+[data-testid="metric-container"] {
+    background-color: #FFF8E7;
+    border: 1px solid #FFB800;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+/* info/success/warning 박스 */
+.stAlert { border-radius: 8px; }
+div[data-testid="stAlert"][data-type="success"] {
+    background-color: #FFF8E7;
+    border-left: 4px solid #FFB800;
+}
+
+/* 테이블 헤더 */
+thead tr th {
+    background-color: #1A1A1A !important;
+    color: #FFB800 !important;
+}
+
+/* KB 상단 헤더 바 */
+.kb-header {
+    background: linear-gradient(90deg, #1A1A1A 0%, #3A3A3A 100%);
+    color: #FFB800;
+    padding: 12px 24px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 18px;
+    font-weight: 700;
+}
+.kb-badge {
+    background: #FFB800;
+    color: #1A1A1A;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# KB 헤더
+st.markdown("""
+<div class="kb-header">
+    ★ KB국민은행 &nbsp;<span class="kb-badge">AI 해커톤 2026</span>
+    &nbsp;|&nbsp; 소상공인 창업 입지 추천 서비스
+</div>
+""", unsafe_allow_html=True)
+
 # ─── 사이드바: 사용자 조건 입력 ──────────────────────────────
 with st.sidebar:
-    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/KB_Financial_Group_logo.svg/200px-KB_Financial_Group_logo.svg.png",
-             width=120)
-    st.title("창업 조건 입력")
+    st.markdown("""
+    <div style="text-align:center; padding: 8px 0 16px 0;">
+        <div style="font-size:28px; font-weight:900; color:#FFB800; letter-spacing:2px;">KB</div>
+        <div style="font-size:11px; color:#AAAAAA; margin-top:2px;">국민은행 · 창업 입지 추천</div>
+    </div>
+    <hr style="border-color:#333; margin-bottom:16px;">
+    """, unsafe_allow_html=True)
+    st.markdown("### ⚙️ 창업 조건 입력")
 
     category = st.selectbox("업종", ["카페", "음식점", "편의점", "의류", "기타"])
     region   = st.selectbox("지역", ["마포구"])  # 시연: 마포구 고정
@@ -58,7 +172,11 @@ with st.sidebar:
     run_btn = st.button("🔍 입지 분석 시작", type="primary", use_container_width=True)
 
 st.title("🏪 소상공인 창업 입지 추천")
-st.caption(f"업종: **{category}** | 지역: **{region}** | 자기자금: **{self_fund/10000:,.0f}만원**")
+st.markdown(
+    f"<p style='color:#888; font-size:14px;'>업종: <b>{category}</b> &nbsp;|&nbsp; "
+    f"지역: <b>{region}</b> &nbsp;|&nbsp; 자기자금: <b>{self_fund/10000:,.0f}만원</b></p>",
+    unsafe_allow_html=True,
+)
 
 if not run_btn:
     st.info("왼쪽 사이드바에서 창업 조건을 입력하고 **입지 분석 시작**을 누르세요.")
