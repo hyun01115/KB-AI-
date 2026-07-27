@@ -36,30 +36,42 @@ st.markdown("""
 .stApp { background-color: #F7F8FA; font-family: 'Apple SD Gothic Neo', sans-serif; }
 .block-container { padding-top: 1.5rem !important; max-width: 1200px; }
 
-/* 사이드바 */
-[data-testid="stSidebar"] { background-color: #1C1C1E !important; }
-[data-testid="stSidebar"] label { color: #E0E0E0 !important; font-size: 13px; }
+/* 사이드바 — 밝은 회색 배경 */
+[data-testid="stSidebar"] { background-color: #F0F2F5 !important; }
+[data-testid="stSidebar"] label { color: #333333 !important; font-size: 13px; font-weight: 600; }
 [data-testid="stSidebar"] p,
-[data-testid="stSidebar"] span { color: #CCCCCC !important; }
-[data-testid="stSidebar"] h3 { color: #FFFFFF !important; }
+[data-testid="stSidebar"] span { color: #444444 !important; }
+[data-testid="stSidebar"] b { color: #1C1C1E !important; }
 [data-testid="stSidebar"] input,
 [data-testid="stSidebar"] .stSelectbox > div > div {
-    background-color: #2C2C2E !important;
-    color: #FFFFFF !important;
-    border: 1px solid #3A3A3C !important;
-}
-
-/* 입지 분석 시작 버튼 */
-.stButton > button {
-    background-color: #FFB800 !important;
+    background-color: #FFFFFF !important;
     color: #1C1C1E !important;
+    border: 1px solid #D1D5DB !important;
+}
+/* multiselect 태그 */
+[data-testid="stSidebar"] [data-baseweb="tag"] {
+    background-color: #1C1C1E !important;
+    color: #FFFFFF !important;
+}
+/* 사이드바 구분선 */
+[data-testid="stSidebar"] hr { border-color: #D1D5DB !important; }
+/* 사이드바 캡션 */
+[data-testid="stSidebar"] .stCaption { color: #666666 !important; }
+
+/* 입지 분석 시작 버튼 — 진한 배경 + 흰 글씨 → 가독성 최우선 */
+.stButton > button {
+    background-color: #1C1C1E !important;
+    color: #FFFFFF !important;
     font-weight: 700 !important;
     font-size: 15px !important;
     border: none !important;
     border-radius: 8px !important;
     height: 48px !important;
 }
-.stButton > button:hover { background-color: #E6A500 !important; }
+.stButton > button:hover {
+    background-color: #FFB800 !important;
+    color: #1C1C1E !important;
+}
 
 /* 메인 제목 */
 h1 { color: #1C1C1E !important; font-size: 26px !important; font-weight: 800 !important; }
@@ -159,11 +171,13 @@ if "all_results" not in st.session_state:
 # ─── 사이드바: 조건 입력 ──────────────────────────────────────
 with st.sidebar:
     st.markdown("""
-    <div style="text-align:center; padding:12px 0;">
-      <div style="font-size:26px; font-weight:900; color:#FFB800; letter-spacing:3px;">KB</div>
-      <div style="font-size:11px; color:#888; margin-top:4px;">창업 입지 추천 서비스</div>
+    <div style="text-align:center; padding:12px 0 16px 0;">
+      <div style="display:inline-block; background:#1C1C1E; color:#FFB800;
+                  font-size:22px; font-weight:900; letter-spacing:3px;
+                  padding:6px 18px; border-radius:8px;">KB</div>
+      <div style="font-size:11px; color:#666; margin-top:8px; font-weight:600;">창업 입지 추천 서비스</div>
     </div>
-    <hr style="border:none; border-top:1px solid #333; margin:12px 0 20px 0;">
+    <hr style="border:none; border-top:1px solid #D1D5DB; margin:0 0 16px 0;">
     """, unsafe_allow_html=True)
 
     st.markdown("**업종 / 지역**")
