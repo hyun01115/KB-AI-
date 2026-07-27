@@ -195,23 +195,11 @@ with st.sidebar:
     max_burden = st.number_input("월 금융부담 한도 (만원)",min_value=10,   max_value=500,   value=100,   step=10)  * 10_000
 
     st.markdown("---")
-    st.markdown("**어떤 조건을 중시하나요?**")
-    st.caption("해당하는 항목을 모두 선택하세요. 선택한 항목을 기준으로 최적 입지를 추천합니다.")
-    PRIORITY_OPTIONS = [
-        "임대료 — 월세가 낮을수록 좋다",
-        "유동인구 — 사람이 많이 다니는 곳이 좋다",
-        "경쟁 점포 — 주변에 같은 업종이 적을수록 좋다",
-        "매장 면적 — 넓은 매장이 좋다",
-        "수익성 — 예상 매출이 높은 곳이 좋다",
-    ]
-    priority_selected = st.multiselect(
-        "우선순위",
-        PRIORITY_OPTIONS,
-        default=PRIORITY_OPTIONS[:3],
-        label_visibility="collapsed",
+    priority = st.multiselect(
+        "중요하게 생각하는 조건을 선택하세요",
+        ["임대료", "유동인구", "경쟁 점포", "매장 면적", "수익성"],
+        default=["임대료", "유동인구", "경쟁 점포"],
     )
-    # 내부 키워드 추출 (module7 호환)
-    priority = [opt.split(" — ")[0] for opt in priority_selected]
 
     st.markdown("---")
     run_btn = st.button("입지 분석 시작", use_container_width=True)

@@ -141,16 +141,19 @@ def _preference_score(candidate: dict, user_prefs: dict) -> float:
     priority = user_prefs.get("priority", [])
     score = 50.0  # 기본
 
-    if "임대료" in priority:
+    def _has(keyword):
+        return any(keyword in p for p in priority)
+
+    if _has("임대료"):
         max_rent = user_prefs.get("max_rent", float("inf"))
         rent = candidate.get("rent_monthly", 0)
         score += 20 if rent <= max_rent else -10
 
-    if "유동인구" in priority:
+    if _has("유동인구"):
         ratio = candidate.get("floating_pop_ratio", 1.0)
-        score += 20 * min(1.0, (ratio - 1.0))  # 구 평균 초과분 비례
+        score += 20 * min(1.0, (ratio - 1.0))
 
-    if "경쟁" in priority:
+    if _has("경쟁"):
         comp = candidate.get("competitor_count_300m", 15)
         score += 20 if comp <= 10 else (10 if comp <= 15 else -5)
 
