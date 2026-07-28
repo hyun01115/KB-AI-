@@ -11,7 +11,7 @@ import plotly.graph_objects as go
 from dotenv import load_dotenv
 load_dotenv()
 
-from data.mapo_demo_data import get_candidates, get_similar_cases
+from data.seoul_demo_data import get_candidates, get_similar_cases, get_map_center, get_all_gu_names
 from src.survival_model import compute_all_candidates
 from src.module2_evidence import generate_evidence_cards
 from src.module3_cases import generate_similar_case_card
@@ -263,7 +263,7 @@ with st.sidebar:
     st.markdown("**업종 / 지역**")
     category = st.selectbox("업종 선택", ["카페", "음식점", "편의점", "의류", "기타"],
                              label_visibility="collapsed")
-    region   = st.selectbox("지역 선택", ["마포구"], label_visibility="collapsed")
+    region   = st.selectbox("지역 선택", get_all_gu_names(), index=get_all_gu_names().index("마포구"), label_visibility="collapsed")
 
     st.markdown("---")
     st.markdown("**자금 조건**")
@@ -294,7 +294,7 @@ if run_btn:
     }
 
     with st.spinner("입지 분석 중..."):
-        candidates   = get_candidates()
+        candidates   = get_candidates(region)
         surv_results = compute_all_candidates(candidates, category)
         surv_map     = {r["candidate_id"]: r for r in surv_results}
 
@@ -302,7 +302,7 @@ if run_btn:
         for cand in candidates:
             cid       = cand["id"]
             surv      = surv_map[cid]
-            cases_raw = get_similar_cases(cid)
+            cases_raw = get_similar_cases(cid, region)
             cost_r    = compute_total_cost(cand)
             gap_r     = compute_funding_gap(cost_r, self_fund)
             products  = match_financial_products(gap_r["funding_gap"], max_burden)
@@ -332,8 +332,9 @@ if run_btn:
                 "category": category,
             })
 
-    st.session_state.all_results   = all_results
-    st.session_state.results_ready = True
+    st.session_state.all_results      = all_results
+    st.session_state.results_ready    = True
+    st.session_state.analysis_region  = region
 
 # ─── 결과 표시 ────────────────────────────────────────────────
 if not st.session_state.results_ready:
@@ -401,7 +402,8 @@ with st.container(border=True):
     try:
         import folium
         from streamlit_folium import st_folium
-        m = folium.Map(location=[37.555, 126.92], zoom_start=14, tiles="CartoDB positron")
+        map_lat, map_lng = get_map_center(st.session_state.get("analysis_region", "마포구"))
+        m = folium.Map(location=[map_lat, map_lng], zoom_start=14, tiles="CartoDB positron")
         colors = {"A": "orange", "B": "red", "C": "green"}
         for r in all_results:
             c = r["cand"]

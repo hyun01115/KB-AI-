@@ -40,10 +40,9 @@ def compute_individual_scores(candidate: dict,
     # ─ 안정성 점수: 생존확률 정규화
     stability_score = normalize_score(survival_result["survival_3y"], s_min, s_max)
 
-    # ─ 수익성 점수: 예상 영업이익 정규화
+    # ─ 수익성 점수: 예상 영업이익 정규화 (서울 카페 일반 범위)
     profit = candidate.get("est_monthly_profit", 0)
-    # 마포구 카페 범위 기준값 (시연용)
-    profitability_score = normalize_score(profit, 4_000_000, 6_000_000)
+    profitability_score = normalize_score(profit, 2_500_000, 7_000_000)
 
     # ─ 금융 실행 가능성 점수
     self_ratio     = gap_result.get("self_ratio", 0.5)
