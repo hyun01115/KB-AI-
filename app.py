@@ -34,7 +34,11 @@ st.markdown("""
 <style>
 /* 전체 */
 .stApp { background-color: #F7F8FA; font-family: 'Apple SD Gothic Neo', sans-serif; }
-.block-container { padding-top: 2.5rem !important; max-width: 1200px; }
+/* 헤더 잘림 방지: padding-top 충분히 확보 */
+.block-container { padding-top: 3rem !important; padding-bottom: 2rem !important; max-width: 1200px; }
+/* Streamlit 기본 여백 리셋 */
+header[data-testid="stHeader"] { display: none !important; }
+.main > div:first-child { margin-top: 0 !important; }
 
 /* 사이드바 — 밝은 회색 배경 */
 [data-testid="stSidebar"] { background-color: #F0F2F5 !important; }
@@ -96,7 +100,8 @@ st.markdown("""
 /* 메인 제목 */
 h1 { color: #1C1C1E !important; font-size: 26px !important; font-weight: 800 !important; }
 h2 { color: #1C1C1E !important; font-size: 20px !important; font-weight: 700 !important;
-     border-left: 4px solid #FFB800; padding-left: 16px; margin-top: 2rem !important; }
+     border-left: 4px solid #FFB800; padding-left: 16px; margin-top: 2rem !important;
+     margin-left: 4px !important; }
 h3 { color: #1C1C1E !important; font-size: 16px !important; font-weight: 600 !important; }
 
 /* 탭 */
@@ -314,21 +319,21 @@ for i, r in enumerate(all_results):
         sig_color = {"green": "#34C759", "yellow": "#FFB800", "red": "#FF3B30"}.get(display_sig, "#888")
         sig_text  = {"green": "금융부담 안전", "yellow": "금융부담 주의", "red": "금융부담 위험"}.get(display_sig, "")
         st.markdown(f"""
-        <div style="background:#FFF; border:{border}; border-radius:12px;
-                    padding:20px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.07);">
-          <div style="font-size:13px; color:#888; margin-bottom:4px;">{rank_labels.get(rank,'')}</div>
-          <div style="font-size:18px; font-weight:800; color:#1C1C1E;">{r['candidate_name']}</div>
-          <div style="font-size:13px; color:#555; margin:4px 0 12px;">{r['cand']['dong']} | {r['cand']['floor_area']}㎡</div>
-          <div style="font-size:36px; font-weight:900; color:#1C1C1E;">{surv_pct:.0f}%</div>
-          <div style="font-size:12px; color:#888; margin-bottom:12px;">3년 생존 가능성</div>
-          <div style="font-size:13px; color:#555;">종합점수 <b>{r['composite_balanced']:.0f}점</b></div>
-          <div style="margin-top:10px;">
+        <div style="background:#FFF; border:{border}; border-radius:14px;
+                    padding:28px 28px 24px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+          <div style="font-size:16px; font-weight:700; color:#888; margin-bottom:6px;">{rank_labels.get(rank,'')}</div>
+          <div style="font-size:22px; font-weight:800; color:#1C1C1E; margin-bottom:4px;">{r['candidate_name']}</div>
+          <div style="font-size:15px; color:#555; margin-bottom:16px;">{r['cand']['dong']} | {r['cand']['floor_area']}㎡</div>
+          <div style="font-size:52px; font-weight:900; color:#1C1C1E; line-height:1.1;">{surv_pct:.0f}%</div>
+          <div style="font-size:16px; color:#888; margin-bottom:14px; margin-top:4px;">3년 생존 가능성</div>
+          <div style="font-size:16px; color:#555; margin-bottom:14px;">종합점수 <b style="color:#1C1C1E;">{r['composite_balanced']:.0f}점</b></div>
+          <div>
             <span style="background:{sig_color}20; color:{sig_color}; border:1px solid {sig_color};
-                         font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px;">
+                         font-size:14px; font-weight:700; padding:5px 14px; border-radius:20px;">
               {sig_text}
             </span>
           </div>
-          {"<div style='margin-top:8px; font-size:11px; color:#FF6B00;'>예산 조건 확인 필요</div>" if r['warnings'] else ""}
+          {"<div style='margin-top:10px; font-size:14px; color:#FF6B00; font-weight:600;'>예산 조건 확인 필요</div>" if r['warnings'] else ""}
         </div>
         """, unsafe_allow_html=True)
 
