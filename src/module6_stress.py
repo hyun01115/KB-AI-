@@ -85,7 +85,7 @@ def _apply_scenario(candidate: dict, survival_result: dict,
         cashflow_warning = f"현재 시나리오에서 {months_to_zero}개월 후 운영자금 소진 예상"
     else:
         months_to_zero = None
-        cashflow_warning = "운영자금 소진 위험 없음"
+        cashflow_warning = "위험 없음"
 
     return {
         "scenario":              name,

@@ -99,7 +99,7 @@ def check_condition_warnings(candidate: dict, gap_result: dict,
         )
     if gap_result.get("funding_gap", 0) > 0:
         warnings.append(
-            f"조건 조정 필요: 추가 조달 필요금액 {gap_result['funding_gap']:,}원"
+            f"추가 자금 조달이 필요함: {gap_result['funding_gap']:,}원"
         )
     return warnings
 
@@ -120,7 +120,7 @@ def build_final_recommendation(all_results: list[dict]) -> dict:
     return {
         "balanced": {
             "candidate": balanced["candidate_name"],
-            "reason": "안정성·수익성·금융부담이 고르게 우수한 입지",
+            "reason": "안정성·수익성·금융부담 균형이 가장 우수합니다",
             "composite_score": balanced.get("composite_balanced"),
         },
         "growth": {

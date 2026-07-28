@@ -33,12 +33,21 @@ st.set_page_config(
 st.markdown("""
 <style>
 /* 전체 */
-.stApp { background-color: #F7F8FA; font-family: 'Apple SD Gothic Neo', sans-serif; }
+.stApp { background-color: #F4F5F7; font-family: 'Apple SD Gothic Neo', sans-serif; }
 /* 헤더 잘림 방지: padding-top 충분히 확보 */
-.block-container { padding-top: 3rem !important; padding-bottom: 2rem !important; max-width: 1200px; }
+.block-container { max-width: 1200px; margin: 0 auto; padding: 3rem 40px 2rem !important; }
 /* Streamlit 기본 여백 리셋 */
 header[data-testid="stHeader"] { display: none !important; }
 .main > div:first-child { margin-top: 0 !important; }
+
+/* 섹션 카드 */
+.kb-section-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 36px 40px;
+    margin-bottom: 32px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
 
 /* 사이드바 — 밝은 회색 배경 */
 [data-testid="stSidebar"] { background-color: #F0F2F5 !important; }
@@ -98,11 +107,23 @@ header[data-testid="stHeader"] { display: none !important; }
 }
 
 /* 메인 제목 */
-h1 { color: #1C1C1E !important; font-size: 26px !important; font-weight: 800 !important; }
-h2 { color: #1C1C1E !important; font-size: 20px !important; font-weight: 700 !important;
-     border-left: 4px solid #FFB800; padding-left: 16px; margin-top: 2rem !important;
-     margin-left: 4px !important; }
+h1 { color: #1A1A1A !important; font-size: 26px !important; font-weight: 800 !important; }
+h2 {
+    color: #1A1A1A !important;
+    font-size: 24px !important;
+    font-weight: 800 !important;
+    border-left: 4px solid #FFBC00;
+    padding-left: 16px;
+    margin-top: 0 !important;
+    margin-bottom: 24px !important;
+    margin-left: 4px !important;
+}
 h3 { color: #1C1C1E !important; font-size: 16px !important; font-weight: 600 !important; }
+
+/* 텍스트 위계 */
+.kb-card-title { font-size: 18px; font-weight: 700; color: #1A1A1A; margin-bottom: 8px; }
+.kb-body { font-size: 15px; color: #444444; }
+.kb-caption { font-size: 13px; color: #888888; }
 
 /* 탭 */
 .stTabs [data-baseweb="tab"] { font-size: 15px; font-weight: 600; color: #555 !important; }
@@ -304,6 +325,7 @@ final_rec   = build_final_recommendation(all_results)
 # ════════════════════════════════════════════════════════════
 # SECTION 1 — 후보 입지 요약 카드
 # ════════════════════════════════════════════════════════════
+st.markdown('<div class="kb-section-card">', unsafe_allow_html=True)
 st.header("후보 입지 3곳 비교")
 
 cols = st.columns(3)
@@ -337,10 +359,13 @@ for i, r in enumerate(all_results):
         </div>
         """, unsafe_allow_html=True)
 
+st.markdown('</div>', unsafe_allow_html=True)
+
 # ════════════════════════════════════════════════════════════
 # SECTION 2 — 지도
 # ════════════════════════════════════════════════════════════
-st.header("입지 위치 지도")
+st.markdown('<div class="kb-section-card">', unsafe_allow_html=True)
+st.header("후보 입지 지도")
 try:
     import folium
     from streamlit_folium import st_folium
@@ -364,9 +389,12 @@ try:
 except Exception:
     st.info("지도 표시를 위해 streamlit-folium 패키지가 필요합니다. (pip install streamlit-folium folium)")
 
+st.markdown('</div>', unsafe_allow_html=True)
+
 # ════════════════════════════════════════════════════════════
 # SECTION 3 — 후보별 상세 탭
 # ════════════════════════════════════════════════════════════
+st.markdown('<div class="kb-section-card">', unsafe_allow_html=True)
 st.header("후보별 상세 분석")
 tabs = st.tabs([f"  {r['candidate_name']}  " for r in all_results])
 
@@ -473,9 +501,9 @@ for tab, r in zip(tabs, all_results):
         # 스트레스 테스트
         st.markdown("---")
         st.markdown("### 스트레스 테스트")
-        st.caption("조건이 불리하게 바뀔 경우 어떻게 달라지는지 미리 확인합니다.")
+        st.caption("조건이 나빠지는 상황을 가정해 생존 가능성 변화를 확인합니다.")
         sc_cols = st.columns(3)
-        scenario_icons = {"금리+1%p": "금리 인상", "임대료+10%": "임대료 상승", "매출-30%": "매출 하락"}
+        scenario_icons = {"금리+1%p": "금리 인상", "임대료+10%": "임대료 상승", "매출-30%": "매출 감소"}
         for (sc_name, sc_r), col in zip(r["stress"].items(), sc_cols):
             with col:
                 change = sc_r["survival_change"] * 100
@@ -508,15 +536,18 @@ for tab, r in zip(tabs, all_results):
             for w in r["warnings"]:
                 st.warning(w)
 
+st.markdown('</div>', unsafe_allow_html=True)
+
 # ════════════════════════════════════════════════════════════
 # SECTION 4 — 지표 비교 + 최종 추천
 # ════════════════════════════════════════════════════════════
-st.header("최종 추천")
+st.markdown('<div class="kb-section-card">', unsafe_allow_html=True)
+st.header("종합 비교 · 최종 추천")
 
 chart_col, rec_col = st.columns([1, 1], gap="large")
 
 with chart_col:
-    st.markdown("##### 후보별 지표 레이더")
+    st.markdown("##### 항목별 지표 비교")
     radar_cats = ["안정성", "수익성", "금융\n실행가능성", "선호\n적합성"]
     colors_radar = ["#FFB800", "#1C1C1E", "#34C759"]
     fig = go.Figure()
@@ -539,7 +570,7 @@ with chart_col:
         showlegend=True,
         legend=dict(orientation="h", x=0.5, y=-0.15, xanchor="center", font=dict(size=12)),
         height=380,
-        margin=dict(t=20, b=60, l=20, r=20),
+        margin=dict(t=30, b=80, l=30, r=30),
         paper_bgcolor="rgba(0,0,0,0)",
     )
     st.plotly_chart(fig, use_container_width=True)
@@ -559,7 +590,7 @@ with chart_col:
 with rec_col:
     st.markdown("##### 목적별 최종 추천")
     rec_types = [
-        ("balanced", "균형형 추천",  "#FFB800", "#1C1C1E", "안정성·수익성·금융부담이 고르게 우수"),
+        ("balanced", "균형형 추천",  "#FFB800", "#1C1C1E", "안정성·수익성·금융부담 균형이 가장 우수합니다"),
         ("growth",   "성장형 추천",  "#1C1C1E", "#FFFFFF", "수익성과 유동인구 잠재력이 높은 입지"),
         ("stable",   "안정형 추천",  "#F0F0F0", "#1C1C1E", "생존 가능성과 자금 안정성이 높은 입지"),
     ]
@@ -583,3 +614,5 @@ with rec_col:
       실제 대출 승인은 금융기관 별도 심사에 따릅니다.
     </div>
     """, unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)

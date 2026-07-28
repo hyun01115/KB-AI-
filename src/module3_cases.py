@@ -51,5 +51,5 @@ def generate_similar_case_card(cases: dict, candidate_name: str) -> dict:
             f"적어 통계 신뢰도가 낮습니다. 참고용으로만 활용하세요."
             if warning else ""
         ),
-        "data_source": "공공데이터포털 지방행정 인허가 데이터 (2016~2024)",
+        "data_source": "서울 열린데이터광장·소상공인시장진흥공단 (2016~2024)",
     }
