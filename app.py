@@ -49,7 +49,7 @@ header[data-testid="stHeader"] { display: none !important; }
     margin-bottom: 32px !important;
 }
 .main [data-testid="stVerticalBlockBorderWrapper"] > div {
-    padding: 36px 40px !important;
+    padding: 40px 48px !important;
 }
 
 /* 사이드바 — 밝은 회색 배경 */
@@ -112,16 +112,17 @@ header[data-testid="stHeader"] { display: none !important; }
 h1 { color: #1A1A1A !important; font-size: 26px !important; font-weight: 800 !important; }
 h2 {
     color: #1A1A1A !important;
-    font-size: 24px !important;
+    font-size: 26px !important;
     font-weight: 800 !important;
     border-left: 4px solid #FFBC00;
-    padding-left: 16px;
+    padding-left: 14px;
     margin-top: 0 !important;
-    margin-bottom: 24px !important;
+    margin-bottom: 32px !important;
 }
-h3 { color: #1C1C1E !important; font-size: 17px !important; font-weight: 700 !important;
-     padding-left: 8px !important; margin-top: 1.2rem !important; }
-h5 { padding-left: 4px !important; }
+h3 { color: #1A1A1A !important; font-size: 20px !important; font-weight: 700 !important;
+     margin-bottom: 16px !important; margin-top: 1.2rem !important; }
+h5 { color: #1A1A1A !important; font-size: 20px !important; font-weight: 700 !important;
+     margin-bottom: 16px !important; }
 
 /* 텍스트 위계 클래스 */
 .kb-card-title { font-size: 18px; font-weight: 700; color: #1A1A1A; margin-bottom: 8px; }
@@ -129,7 +130,12 @@ h5 { padding-left: 4px !important; }
 .kb-caption { font-size: 13px; color: #888888; }
 
 /* 탭 */
-.stTabs [data-baseweb="tab"] { font-size: 15px; font-weight: 600; color: #555 !important; }
+.stTabs [data-baseweb="tab-list"] { gap: 32px !important; }
+.stTabs [data-baseweb="tab"] {
+    font-size: 18px !important; font-weight: 700 !important;
+    color: #999 !important;
+    padding: 12px 16px !important;
+}
 .stTabs [aria-selected="true"] {
     color: #1C1C1E !important;
     border-bottom: 3px solid #FFB800 !important;
@@ -140,7 +146,7 @@ h5 { padding-left: 4px !important; }
     background-color: #FFFFFF;
     border: 1px solid #E5E5EA;
     border-radius: 10px;
-    padding: 24px 16px !important;
+    padding: 32px 16px !important;
     box-shadow: 0 1px 4px rgba(0,0,0,0.06);
     text-align: center;
     display: flex !important;
@@ -148,20 +154,22 @@ h5 { padding-left: 4px !important; }
     align-items: center !important;
     justify-content: center !important;
 }
-[data-testid="stMetricLabel"] {
-    color: #6B6B6B !important; font-size: 14px !important;
+[data-testid="stMetricLabel"],
+[data-testid="stMetricLabel"] > div,
+[data-testid="stMetricLabel"] label {
+    color: #888 !important; font-size: 16px !important;
     justify-content: center !important;
     width: 100% !important; text-align: center !important;
 }
-[data-testid="stMetricLabel"] > div { width: 100% !important; text-align: center !important; }
-[data-testid="stMetricValue"] {
-    color: #1C1C1E !important; font-size: 26px !important; font-weight: 800 !important;
+[data-testid="stMetricValue"],
+[data-testid="stMetricValue"] > div {
+    color: #1C1C1E !important; font-size: 32px !important; font-weight: 800 !important;
     justify-content: center !important;
     width: 100% !important; text-align: center !important;
 }
-[data-testid="stMetricValue"] > div { width: 100% !important; text-align: center !important; }
-[data-testid="stMetricDelta"] {
-    font-size: 13px !important;
+[data-testid="stMetricDelta"],
+[data-testid="stMetricDelta"] > div {
+    font-size: 14px !important;
     justify-content: center !important;
     width: 100% !important; text-align: center !important;
 }
@@ -352,7 +360,7 @@ final_rec   = build_final_recommendation(all_results)
 with st.container(border=True):
     st.header("후보 입지 3곳 비교")
 
-    cols = st.columns(3, gap="medium")
+    cols = st.columns(3, gap="large")
     rank_labels = {1: "1위 (안정성)", 2: "2위", 3: "3위"}
     for i, r in enumerate(all_results):
         with cols[i]:
@@ -428,7 +436,7 @@ with st.container(border=True):
             sf   = r["self_fund"]
 
             # 핵심 지표 4개
-            c1, c2, c3, c4 = st.columns(4)
+            c1, c2, c3, c4 = st.columns(4, gap="medium")
             c1.metric("3년 생존 가능성",  f"{surv['survival_3y']*100:.0f}%")
             c2.metric("예상 월매출",      f"{cand['est_monthly_revenue']//10000:,}만원")
             c3.metric("총 필요자금",      f"{cost['total_cost']//10000:,}만원")
