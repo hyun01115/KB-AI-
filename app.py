@@ -119,7 +119,9 @@ h2 {
     margin-top: 0 !important;
     margin-bottom: 24px !important;
 }
-h3 { color: #1C1C1E !important; font-size: 16px !important; font-weight: 600 !important; }
+h3 { color: #1C1C1E !important; font-size: 17px !important; font-weight: 700 !important;
+     padding-left: 8px !important; margin-top: 1.2rem !important; }
+h5 { padding-left: 4px !important; }
 
 /* 텍스트 위계 클래스 */
 .kb-card-title { font-size: 18px; font-weight: 700; color: #1A1A1A; margin-bottom: 8px; }
@@ -133,26 +135,35 @@ h3 { color: #1C1C1E !important; font-size: 16px !important; font-weight: 600 !im
     border-bottom: 3px solid #FFB800 !important;
 }
 
-/* ── 지표 카드 (metric) 중앙 정렬 ── */
+/* ── 지표 카드 (metric) 완전 중앙 정렬 ── */
 [data-testid="metric-container"] {
     background-color: #FFFFFF;
     border: 1px solid #E5E5EA;
     border-radius: 10px;
-    padding: 20px 16px !important;
+    padding: 24px 16px !important;
     box-shadow: 0 1px 4px rgba(0,0,0,0.06);
     text-align: center;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 [data-testid="stMetricLabel"] {
-    color: #6B6B6B !important; font-size: 13px !important;
+    color: #6B6B6B !important; font-size: 14px !important;
     justify-content: center !important;
+    width: 100% !important; text-align: center !important;
 }
+[data-testid="stMetricLabel"] > div { width: 100% !important; text-align: center !important; }
 [data-testid="stMetricValue"] {
-    color: #1C1C1E !important; font-size: 22px !important; font-weight: 700 !important;
+    color: #1C1C1E !important; font-size: 26px !important; font-weight: 800 !important;
     justify-content: center !important;
+    width: 100% !important; text-align: center !important;
 }
+[data-testid="stMetricValue"] > div { width: 100% !important; text-align: center !important; }
 [data-testid="stMetricDelta"] {
-    font-size: 12px !important;
+    font-size: 13px !important;
     justify-content: center !important;
+    width: 100% !important; text-align: center !important;
 }
 
 /* 테이블 */
@@ -201,9 +212,17 @@ tbody tr:nth-child(even) { background-color: #F7F8FA; }
 </style>
 """, unsafe_allow_html=True)
 
+# ─── 브라우저 자동번역 차단 (한글 깨짐 방지) ─────────────────
+st.markdown("""
+<meta name="google" content="notranslate">
+<meta http-equiv="Content-Language" content="ko">
+<style>.stApp { translate: no; }</style>
+<script>document.documentElement.lang='ko'; document.documentElement.translate=false;</script>
+""", unsafe_allow_html=True)
+
 # ─── 상단 KB 헤더 ─────────────────────────────────────────────
 st.markdown("""
-<div class="kb-top-bar">
+<div class="kb-top-bar" translate="no">
   <div class="kb-logo">KB</div>
   <div>
     <div style="color:#FFFFFF; font-weight:700; font-size:16px;">소상공인 창업 입지 추천</div>
@@ -333,7 +352,7 @@ final_rec   = build_final_recommendation(all_results)
 with st.container(border=True):
     st.header("후보 입지 3곳 비교")
 
-    cols = st.columns(3)
+    cols = st.columns(3, gap="medium")
     rank_labels = {1: "1위 (안정성)", 2: "2위", 3: "3위"}
     for i, r in enumerate(all_results):
         with cols[i]:
@@ -516,18 +535,18 @@ with st.container(border=True):
                         change_str = "변화 없음"
                     sig_c = {"green": "#34C759", "yellow": "#FFB800", "red": "#FF3B30"}.get(sc_r["signal"], "#888")
                     st.markdown(f"""
-                    <div style="background:#F7F8FA; border:1px solid #E5E5EA; border-radius:10px; padding:16px; text-align:center;">
-                      <div style="font-size:12px; color:#888; margin-bottom:4px;">{scenario_icons.get(sc_name, sc_name)}</div>
-                      <div style="font-size:15px; font-weight:700; color:#1C1C1E;">{sc_name}</div>
-                      <div style="font-size:24px; font-weight:900; color:#1C1C1E; margin:8px 0;">{sc_r['survival_3y']*100:.0f}%</div>
-                      <div style="font-size:12px; color:{'#FF3B30' if change < 0 else '#34C759'};">{change_str}</div>
-                      <div style="margin-top:8px;">
+                    <div style="background:#F7F8FA; border:1px solid #E5E5EA; border-radius:12px; padding:22px 16px; text-align:center;">
+                      <div style="font-size:14px; color:#888; margin-bottom:6px;">{scenario_icons.get(sc_name, sc_name)}</div>
+                      <div style="font-size:17px; font-weight:700; color:#1C1C1E;">{sc_name}</div>
+                      <div style="font-size:32px; font-weight:900; color:#1C1C1E; margin:10px 0;">{sc_r['survival_3y']*100:.0f}%</div>
+                      <div style="font-size:14px; font-weight:600; color:{'#FF3B30' if change < 0 else '#34C759'};">{change_str}</div>
+                      <div style="margin-top:10px;">
                         <span style="background:{sig_c}20; color:{sig_c}; border:1px solid {sig_c};
-                                     font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px;">
+                                     font-size:13px; font-weight:700; padding:4px 12px; border-radius:20px;">
                           {sc_r['signal_label']}
                         </span>
                       </div>
-                      <div style="font-size:11px; color:#888; margin-top:8px;">{sc_r['cashflow_warning']}</div>
+                      <div style="font-size:13px; color:#666; margin-top:10px; line-height:1.4;">{sc_r['cashflow_warning']}</div>
                     </div>
                     """, unsafe_allow_html=True)
 
