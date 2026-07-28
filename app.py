@@ -33,9 +33,10 @@ st.set_page_config(
 st.markdown("""
 <style>
 /* ===== 0. 전역 폰트 — 크기는 텍스트 요소에만, div/span은 건드리지 않음 ===== */
-* { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif !important; }
+* { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif !important; box-sizing: border-box !important; }
 html, body, .stApp { font-size: 17px; }
 .stMarkdown p, .stMarkdown li, td, th, label { font-size: 17px; }
+.stMarkdown div, .stMarkdown p { word-break: keep-all; overflow-wrap: break-word; text-align: left; }
 .stApp { background-color: #F4F5F7; }
 
 /* 컨테이너 중앙 정렬 */
@@ -89,10 +90,15 @@ header[data-testid="stHeader"] { display: none !important; }
 
 /* ===== 타이포그래피 위계 ===== */
 h1 { color: #1A1A1A !important; font-size: 28px !important; font-weight: 800 !important; }
+/* 섹션 제목 — 배경 밴드로 확실히 구분 */
 h2 {
     color: #1A1A1A !important; font-size: 26px !important; font-weight: 800 !important;
-    border-left: 4px solid #FFBC00; padding-left: 14px;
-    margin-top: 0 !important; margin-bottom: 32px !important;
+    background: #F7F8FA !important;
+    border-left: 6px solid #FFBC00 !important;
+    border-radius: 0 10px 10px 0 !important;
+    padding: 16px 24px !important;
+    margin: 0 0 28px 0 !important;
+    display: block !important;
 }
 /* 소제목 22px / 800 */
 h3 {
@@ -187,10 +193,18 @@ tbody tr:nth-child(even) { background-color: #F7F8FA; }
 .signal-red    { background:#FFECEC; color:#8B1A1A; border:1px solid #FF3B30;
                  border-radius:8px; padding:12px 20px; font-weight:700; font-size:16px !important; display:inline-block; }
 
-/* ===== 추천 근거 카드 — 좌측 바 파란색 통일 (방향은 아이콘 색으로 구분) ===== */
-.evidence-good, .evidence-bad, .evidence-info {
-    border-left: 4px solid #3B82F6; padding: 20px 24px;
-    background:#F8FAFC; border-radius:0 8px 8px 0; margin-bottom:16px; color:#1C1C1E;
+/* ===== 추천 근거 카드 — 방향별 배경색 (좋음=초록 / 나쁨=빨강 / 중립=파랑) ===== */
+.evidence-good {
+    border-left: 4px solid #34C759; background: #EDFAF1;
+    padding: 20px 24px; border-radius: 0 8px 8px 0; margin-bottom: 16px; color: #1C1C1E;
+}
+.evidence-bad {
+    border-left: 4px solid #FF3B30; background: #FFF0EF;
+    padding: 20px 24px; border-radius: 0 8px 8px 0; margin-bottom: 16px; color: #1C1C1E;
+}
+.evidence-info {
+    border-left: 4px solid #3B82F6; background: #EEF4FF;
+    padding: 20px 24px; border-radius: 0 8px 8px 0; margin-bottom: 16px; color: #1C1C1E;
 }
 .evidence-good .ev-icon { color:#34C759; }
 .evidence-bad  .ev-icon { color:#FF3B30; }
