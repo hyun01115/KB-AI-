@@ -32,11 +32,10 @@ st.set_page_config(
 # ─── CSS ──────────────────────────────────────────────────────
 st.markdown("""
 <style>
-/* ===== 0. 전역 기본 폰트 18px ===== */
-html, body, .stApp, .stMarkdown, p, span, li, td, th, label, div {
-    font-size: 18px !important;
-    font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif !important;
-}
+/* ===== 0. 전역 폰트 — 크기는 텍스트 요소에만, div/span은 건드리지 않음 ===== */
+* { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif !important; }
+html, body, .stApp { font-size: 17px; }
+.stMarkdown p, .stMarkdown li, td, th, label { font-size: 17px; }
 .stApp { background-color: #F4F5F7; }
 
 /* 컨테이너 중앙 정렬 */
@@ -44,16 +43,14 @@ html, body, .stApp, .stMarkdown, p, span, li, td, th, label, div {
 header[data-testid="stHeader"] { display: none !important; }
 .main > div:first-child { margin-top: 0 !important; }
 
-/* ===== 섹션 카드 래퍼 — padding 48px ===== */
-.main [data-testid="stVerticalBlockBorderWrapper"] {
+/* ===== 섹션 카드 래퍼 — 래퍼 자체에 padding (DOM 구조 무관하게 적용) ===== */
+[data-testid="stVerticalBlockBorderWrapper"] {
     background: #FFFFFF !important;
     border: none !important;
     border-radius: 16px !important;
     box-shadow: 0 2px 12px rgba(0,0,0,0.06) !important;
     margin-bottom: 32px !important;
-}
-.main [data-testid="stVerticalBlockBorderWrapper"] > div {
-    padding: 48px !important;
+    padding: 40px 48px !important;
 }
 
 /* ===== 사이드바 ===== */
@@ -190,19 +187,14 @@ tbody tr:nth-child(even) { background-color: #F7F8FA; }
 .signal-red    { background:#FFECEC; color:#8B1A1A; border:1px solid #FF3B30;
                  border-radius:8px; padding:12px 20px; font-weight:700; font-size:16px !important; display:inline-block; }
 
-/* ===== 추천 근거 카드 — KB 노란 좌측 바 ===== */
-.evidence-good {
-    border-left: 4px solid #FFBC00; padding: 20px 24px;
-    background:#FAFBFC; border-radius:0 8px 8px 0; margin-bottom:16px; color:#1C1C1E;
+/* ===== 추천 근거 카드 — 좌측 바 파란색 통일 (방향은 아이콘 색으로 구분) ===== */
+.evidence-good, .evidence-bad, .evidence-info {
+    border-left: 4px solid #3B82F6; padding: 20px 24px;
+    background:#F8FAFC; border-radius:0 8px 8px 0; margin-bottom:16px; color:#1C1C1E;
 }
-.evidence-bad {
-    border-left: 4px solid #FF3B30; padding: 20px 24px;
-    background:#FAFBFC; border-radius:0 8px 8px 0; margin-bottom:16px; color:#1C1C1E;
-}
-.evidence-info {
-    border-left: 4px solid #FFBC00; padding: 20px 24px;
-    background:#FAFBFC; border-radius:0 8px 8px 0; margin-bottom:16px; color:#1C1C1E;
-}
+.evidence-good .ev-icon { color:#34C759; }
+.evidence-bad  .ev-icon { color:#FF3B30; }
+.evidence-info .ev-icon { color:#3B82F6; }
 
 /* Streamlit 구분선(hr) 위 과도한 여백 제거 */
 .stMarkdown hr { margin-top: 24px !important; margin-bottom: 24px !important; }
@@ -464,7 +456,7 @@ with st.container(border=True):
                     icon = {"good": "▲", "bad": "▼", "neutral": "●"}.get(ev["direction"], "●")
                     st.markdown(f"""
                     <div class="{css_class}">
-                      <div style="font-size:18px; font-weight:700; margin-bottom:6px;">{icon} {ev['item']}</div>
+                      <div style="font-size:18px; font-weight:700; margin-bottom:6px;"><span class="ev-icon">{icon}</span> {ev['item']}</div>
                       <div style="font-size:16px; line-height:1.7; color:#333;">{ev['sentence']}</div>
                       <div style="font-size:14px; color:#999; margin-top:6px;">출처: {ev['data_source']}</div>
                     </div>
