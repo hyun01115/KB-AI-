@@ -34,7 +34,7 @@ st.markdown("""
 <style>
 /* 전체 */
 .stApp { background-color: #F7F8FA; font-family: 'Apple SD Gothic Neo', sans-serif; }
-.block-container { padding-top: 1.5rem !important; max-width: 1200px; }
+.block-container { padding-top: 2.5rem !important; max-width: 1200px; }
 
 /* 사이드바 — 밝은 회색 배경 */
 [data-testid="stSidebar"] { background-color: #F0F2F5 !important; }
@@ -42,11 +42,29 @@ st.markdown("""
 [data-testid="stSidebar"] p,
 [data-testid="stSidebar"] span { color: #444444 !important; }
 [data-testid="stSidebar"] b { color: #1C1C1E !important; }
-[data-testid="stSidebar"] input,
 [data-testid="stSidebar"] .stSelectbox > div > div {
     background-color: #FFFFFF !important;
     color: #1C1C1E !important;
     border: 1px solid #D1D5DB !important;
+}
+/* 숫자 입력 필드 */
+[data-testid="stSidebar"] input[type="number"] {
+    background-color: #FFFFFF !important;
+    color: #1C1C1E !important;
+    border: 1px solid #D1D5DB !important;
+}
+/* 멀티셀렉트 내부 input은 투명하게 — 빈 흰 박스 방지 */
+[data-testid="stSidebar"] .stMultiSelect input {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    min-width: 2px !important;
+    width: auto !important;
+}
+[data-testid="stSidebar"] .stMultiSelect [data-baseweb="select"] > div:first-child {
+    background-color: #FFFFFF !important;
+    border: 1px solid #D1D5DB !important;
+    min-height: 38px !important;
 }
 /* 사이드바 구분선 */
 [data-testid="stSidebar"] hr { border-color: #D1D5DB !important; }
@@ -78,7 +96,7 @@ st.markdown("""
 /* 메인 제목 */
 h1 { color: #1C1C1E !important; font-size: 26px !important; font-weight: 800 !important; }
 h2 { color: #1C1C1E !important; font-size: 20px !important; font-weight: 700 !important;
-     border-left: 4px solid #FFB800; padding-left: 10px; margin-top: 2rem !important; }
+     border-left: 4px solid #FFB800; padding-left: 16px; margin-top: 2rem !important; }
 h3 { color: #1C1C1E !important; font-size: 16px !important; font-weight: 600 !important; }
 
 /* 탭 */
@@ -160,7 +178,7 @@ st.markdown("""
     <div style="color:#FFFFFF; font-weight:700; font-size:16px;">소상공인 창업 입지 추천</div>
     <div class="kb-sub">AI 기반 3년 생존 가능성 분석 · 금융서비스 연결</div>
   </div>
-  <div class="kb-badge">AI 해커톤 2026</div>
+  <div class="kb-badge">2026 KB AI Challenge</div>
 </div>
 """, unsafe_allow_html=True)
 
