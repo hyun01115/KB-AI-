@@ -335,6 +335,13 @@ if run_btn:
     st.session_state.all_results      = all_results
     st.session_state.results_ready    = True
     st.session_state.analysis_region  = region
+    st.session_state.analysis_params  = {
+        "category": category, "region": region,
+        "self_fund": self_fund, "max_budget": max_budget,
+        "max_rent": max_rent, "max_burden": max_burden,
+        "priority": priority,
+    }
+    st.toast("분석이 완료되었습니다!", icon="✅")
 
 # ─── 결과 표시 ────────────────────────────────────────────────
 if not st.session_state.results_ready:
@@ -356,6 +363,23 @@ if not st.session_state.results_ready:
 
 all_results = sorted(st.session_state.all_results, key=lambda r: r["surv"]["stability_rank"])
 final_rec   = build_final_recommendation(all_results)
+
+# ─── 분석 조건 요약 배너 ─────────────────────────────────────
+ap = st.session_state.get("analysis_params", {})
+if ap:
+    prio_str = " · ".join(ap.get("priority", [])) if ap.get("priority") else "없음"
+    st.markdown(f"""
+    <div style="background:#1C1C1E; color:#FFF; border-radius:10px; padding:14px 24px;
+                margin-bottom:24px; display:flex; flex-wrap:wrap; gap:12px 28px; align-items:center; font-size:15px;">
+      <span style="color:#FFB800; font-weight:800; font-size:16px;">현재 분석 조건</span>
+      <span>{ap.get('region','')} · {ap.get('category','')}</span>
+      <span>자기자금 <b>{ap.get('self_fund',0)//10000:,}만원</b></span>
+      <span>최대예산 <b>{ap.get('max_budget',0)//10000:,}만원</b></span>
+      <span>월임대료 한도 <b>{ap.get('max_rent',0)//10000:,}만원</b></span>
+      <span>월부담 한도 <b>{ap.get('max_burden',0)//10000:,}만원</b></span>
+      <span>우선순위 <b>{prio_str}</b></span>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ════════════════════════════════════════════════════════════
 # SECTION 1 — 후보 입지 요약 카드
