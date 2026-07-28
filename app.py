@@ -29,24 +29,27 @@ st.set_page_config(
     layout="wide",
 )
 
-# ─── CSS: KB 브랜드 (노랑은 포인트만, 텍스트는 항상 진한 색) ──
+# ─── CSS: KB 브랜드 ───────────────────────────────────────────
 st.markdown("""
 <style>
 /* 전체 */
 .stApp { background-color: #F4F5F7; font-family: 'Apple SD Gothic Neo', sans-serif; }
-/* 헤더 잘림 방지: padding-top 충분히 확보 */
+/* 컨테이너 중앙 정렬 */
 .block-container { max-width: 1200px; margin: 0 auto; padding: 3rem 40px 2rem !important; }
-/* Streamlit 기본 여백 리셋 */
+/* Streamlit 기본 상단바 숨기기 */
 header[data-testid="stHeader"] { display: none !important; }
 .main > div:first-child { margin-top: 0 !important; }
 
-/* 섹션 카드 */
-.kb-section-card {
-    background: #FFFFFF;
-    border-radius: 16px;
-    padding: 36px 40px;
-    margin-bottom: 32px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+/* ── 섹션 카드: st.container(border=True) 스타일 ── */
+.main [data-testid="stVerticalBlockBorderWrapper"] {
+    background: #FFFFFF !important;
+    border: none !important;
+    border-radius: 16px !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06) !important;
+    margin-bottom: 32px !important;
+}
+.main [data-testid="stVerticalBlockBorderWrapper"] > div {
+    padding: 36px 40px !important;
 }
 
 /* 사이드바 — 밝은 회색 배경 */
@@ -66,7 +69,7 @@ header[data-testid="stHeader"] { display: none !important; }
     color: #1C1C1E !important;
     border: 1px solid #D1D5DB !important;
 }
-/* 멀티셀렉트 내부 input은 투명하게 — 빈 흰 박스 방지 */
+/* 멀티셀렉트 내부 input — 빈 흰 박스 방지 */
 [data-testid="stSidebar"] .stMultiSelect input {
     background-color: transparent !important;
     border: none !important;
@@ -79,12 +82,11 @@ header[data-testid="stHeader"] { display: none !important; }
     border: 1px solid #D1D5DB !important;
     min-height: 38px !important;
 }
-/* 사이드바 구분선 */
+/* 사이드바 구분선·캡션 */
 [data-testid="stSidebar"] hr { border-color: #D1D5DB !important; }
-/* 사이드바 캡션 */
 [data-testid="stSidebar"] .stCaption { color: #666666 !important; }
 
-/* 입지 분석 시작 버튼 — KB노랑 배경 + 검정 글씨 */
+/* 입지 분석 시작 버튼 */
 .stButton > button {
     background-color: #FFB800 !important;
     color: #1C1C1E !important;
@@ -99,14 +101,14 @@ header[data-testid="stHeader"] { display: none !important; }
     background-color: #E6A500 !important;
     color: #1C1C1E !important;
 }
-/* multiselect 태그 — KB노랑+검정 */
+/* multiselect 태그 */
 [data-testid="stSidebar"] [data-baseweb="tag"] {
     background-color: #FFB800 !important;
     color: #1C1C1E !important;
     font-weight: 700 !important;
 }
 
-/* 메인 제목 */
+/* ── 타이포그래피 위계 ── */
 h1 { color: #1A1A1A !important; font-size: 26px !important; font-weight: 800 !important; }
 h2 {
     color: #1A1A1A !important;
@@ -116,11 +118,10 @@ h2 {
     padding-left: 16px;
     margin-top: 0 !important;
     margin-bottom: 24px !important;
-    margin-left: 4px !important;
 }
 h3 { color: #1C1C1E !important; font-size: 16px !important; font-weight: 600 !important; }
 
-/* 텍스트 위계 */
+/* 텍스트 위계 클래스 */
 .kb-card-title { font-size: 18px; font-weight: 700; color: #1A1A1A; margin-bottom: 8px; }
 .kb-body { font-size: 15px; color: #444444; }
 .kb-caption { font-size: 13px; color: #888888; }
@@ -132,17 +133,27 @@ h3 { color: #1C1C1E !important; font-size: 16px !important; font-weight: 600 !im
     border-bottom: 3px solid #FFB800 !important;
 }
 
-/* 지표 카드 (metric) */
+/* ── 지표 카드 (metric) 중앙 정렬 ── */
 [data-testid="metric-container"] {
     background-color: #FFFFFF;
     border: 1px solid #E5E5EA;
     border-radius: 10px;
-    padding: 16px !important;
+    padding: 20px 16px !important;
     box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    text-align: center;
 }
-[data-testid="stMetricLabel"] { color: #6B6B6B !important; font-size: 13px !important; }
-[data-testid="stMetricValue"] { color: #1C1C1E !important; font-size: 22px !important; font-weight: 700 !important; }
-[data-testid="stMetricDelta"] { font-size: 12px !important; }
+[data-testid="stMetricLabel"] {
+    color: #6B6B6B !important; font-size: 13px !important;
+    justify-content: center !important;
+}
+[data-testid="stMetricValue"] {
+    color: #1C1C1E !important; font-size: 22px !important; font-weight: 700 !important;
+    justify-content: center !important;
+}
+[data-testid="stMetricDelta"] {
+    font-size: 12px !important;
+    justify-content: center !important;
+}
 
 /* 테이블 */
 thead tr th {
@@ -155,21 +166,13 @@ tbody tr:nth-child(even) { background-color: #F7F8FA; }
 /* 알림 박스 */
 .stAlert { border-radius: 8px !important; }
 
-/* KB 섹션 헤더 카드 */
-.kb-section {
-    background: #FFFFFF;
-    border-radius: 12px;
-    padding: 20px 24px;
-    margin-bottom: 16px;
-    border: 1px solid #E5E5EA;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-}
+/* ── KB 상단 헤더 ── */
 .kb-top-bar {
     background: linear-gradient(135deg, #1C1C1E 0%, #2C2C2E 100%);
     color: #FFFFFF;
     padding: 14px 22px;
     border-radius: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     display: flex;
     align-items: center;
     gap: 14px;
@@ -181,6 +184,8 @@ tbody tr:nth-child(even) { background-color: #F7F8FA; }
     padding: 3px 10px; border-radius: 20px;
     font-size: 11px; font-weight: 700; margin-left: auto;
 }
+
+/* ── 신호등·근거 ── */
 .signal-green  { background:#E8F8EF; color:#1A7A45; border:1px solid #34C759;
                  border-radius:8px; padding:10px 16px; font-weight:700; display:inline-block; }
 .signal-yellow { background:#FFF8E0; color:#7A5A00; border:1px solid #FFB800;
@@ -325,294 +330,286 @@ final_rec   = build_final_recommendation(all_results)
 # ════════════════════════════════════════════════════════════
 # SECTION 1 — 후보 입지 요약 카드
 # ════════════════════════════════════════════════════════════
-st.markdown('<div class="kb-section-card">', unsafe_allow_html=True)
-st.header("후보 입지 3곳 비교")
+with st.container(border=True):
+    st.header("후보 입지 3곳 비교")
 
-cols = st.columns(3)
-rank_labels = {1: "1위 (안정성)", 2: "2위", 3: "3위"}
-for i, r in enumerate(all_results):
-    with cols[i]:
-        surv_pct = r["surv"]["survival_3y"] * 100
-        rank     = r["surv"]["stability_rank"]
-        border   = "2px solid #FFB800" if rank == 1 else "1px solid #E5E5EA"
-        sig      = r["signal_r"]["signal"]
-        # 예산 초과 경고가 있으면 신호등을 최소 yellow로 표시
-        display_sig = sig if not r["warnings"] else ("yellow" if sig == "green" else sig)
-        sig_color = {"green": "#34C759", "yellow": "#FFB800", "red": "#FF3B30"}.get(display_sig, "#888")
-        sig_text  = {"green": "금융부담 안전", "yellow": "금융부담 주의", "red": "금융부담 위험"}.get(display_sig, "")
-        st.markdown(f"""
-        <div style="background:#FFF; border:{border}; border-radius:14px;
-                    padding:28px 28px 24px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.07);">
-          <div style="font-size:16px; font-weight:700; color:#888; margin-bottom:6px;">{rank_labels.get(rank,'')}</div>
-          <div style="font-size:22px; font-weight:800; color:#1C1C1E; margin-bottom:4px;">{r['candidate_name']}</div>
-          <div style="font-size:15px; color:#555; margin-bottom:16px;">{r['cand']['dong']} | {r['cand']['floor_area']}㎡</div>
-          <div style="font-size:52px; font-weight:900; color:#1C1C1E; line-height:1.1;">{surv_pct:.0f}%</div>
-          <div style="font-size:16px; color:#888; margin-bottom:14px; margin-top:4px;">3년 생존 가능성</div>
-          <div style="font-size:16px; color:#555; margin-bottom:14px;">종합점수 <b style="color:#1C1C1E;">{r['composite_balanced']:.0f}점</b></div>
-          <div>
-            <span style="background:{sig_color}20; color:{sig_color}; border:1px solid {sig_color};
-                         font-size:14px; font-weight:700; padding:5px 14px; border-radius:20px;">
-              {sig_text}
-            </span>
-          </div>
-          {"<div style='margin-top:10px; font-size:14px; color:#FF6B00; font-weight:600;'>예산 조건 확인 필요</div>" if r['warnings'] else ""}
-        </div>
-        """, unsafe_allow_html=True)
-
-st.markdown('</div>', unsafe_allow_html=True)
+    cols = st.columns(3)
+    rank_labels = {1: "1위 (안정성)", 2: "2위", 3: "3위"}
+    for i, r in enumerate(all_results):
+        with cols[i]:
+            surv_pct = r["surv"]["survival_3y"] * 100
+            rank     = r["surv"]["stability_rank"]
+            border   = "2px solid #FFB800" if rank == 1 else "1px solid #E5E5EA"
+            sig      = r["signal_r"]["signal"]
+            # 예산 초과 경고가 있으면 신호등을 최소 yellow로 표시
+            display_sig = sig if not r["warnings"] else ("yellow" if sig == "green" else sig)
+            sig_color = {"green": "#34C759", "yellow": "#FFB800", "red": "#FF3B30"}.get(display_sig, "#888")
+            sig_text  = {"green": "금융부담 안전", "yellow": "금융부담 주의", "red": "금융부담 위험"}.get(display_sig, "")
+            st.markdown(f"""
+            <div style="background:#FFF; border:{border}; border-radius:14px;
+                        padding:28px 28px 24px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+              <div style="font-size:16px; font-weight:700; color:#888; margin-bottom:6px;">{rank_labels.get(rank,'')}</div>
+              <div style="font-size:22px; font-weight:800; color:#1C1C1E; margin-bottom:4px;">{r['candidate_name']}</div>
+              <div style="font-size:15px; color:#555; margin-bottom:16px;">{r['cand']['dong']} | {r['cand']['floor_area']}㎡</div>
+              <div style="font-size:52px; font-weight:900; color:#1C1C1E; line-height:1.1;">{surv_pct:.0f}%</div>
+              <div style="font-size:16px; color:#888; margin-bottom:14px; margin-top:4px;">3년 생존 가능성</div>
+              <div style="font-size:16px; color:#555; margin-bottom:14px;">종합점수 <b style="color:#1C1C1E;">{r['composite_balanced']:.0f}점</b></div>
+              <div>
+                <span style="background:{sig_color}20; color:{sig_color}; border:1px solid {sig_color};
+                             font-size:14px; font-weight:700; padding:5px 14px; border-radius:20px;">
+                  {sig_text}
+                </span>
+              </div>
+              {"<div style='margin-top:10px; font-size:14px; color:#FF6B00; font-weight:600;'>예산 조건 확인 필요</div>" if r['warnings'] else ""}
+            </div>
+            """, unsafe_allow_html=True)
 
 # ════════════════════════════════════════════════════════════
 # SECTION 2 — 지도
 # ════════════════════════════════════════════════════════════
-st.markdown('<div class="kb-section-card">', unsafe_allow_html=True)
-st.header("후보 입지 지도")
-try:
-    import folium
-    from streamlit_folium import st_folium
-    m = folium.Map(location=[37.555, 126.92], zoom_start=14, tiles="CartoDB positron")
-    colors = {"A": "orange", "B": "red", "C": "green"}
-    for r in all_results:
-        c = r["cand"]
-        surv_pct = r["surv"]["survival_3y"] * 100
-        folium.Marker(
-            [c["lat"], c["lng"]],
-            popup=folium.Popup(
-                f"<b>{c['name']}</b><br>3년 생존 가능성: {surv_pct:.0f}%<br>"
-                f"월 임대료: {c['rent_monthly']//10000:,}만원<br>"
-                f"경쟁 점포: {c['competitor_count_300m']}개",
-                max_width=200,
-            ),
-            tooltip=f"{c['name']} — {surv_pct:.0f}%",
-            icon=folium.Icon(color=colors.get(c["id"], "gray"), icon="store", prefix="fa"),
-        ).add_to(m)
-    st_folium(m, width="100%", height=380, returned_objects=[])
-except Exception:
-    st.info("지도 표시를 위해 streamlit-folium 패키지가 필요합니다. (pip install streamlit-folium folium)")
-
-st.markdown('</div>', unsafe_allow_html=True)
+with st.container(border=True):
+    st.header("후보 입지 지도")
+    try:
+        import folium
+        from streamlit_folium import st_folium
+        m = folium.Map(location=[37.555, 126.92], zoom_start=14, tiles="CartoDB positron")
+        colors = {"A": "orange", "B": "red", "C": "green"}
+        for r in all_results:
+            c = r["cand"]
+            surv_pct = r["surv"]["survival_3y"] * 100
+            folium.Marker(
+                [c["lat"], c["lng"]],
+                popup=folium.Popup(
+                    f"<b>{c['name']}</b><br>3년 생존 가능성: {surv_pct:.0f}%<br>"
+                    f"월 임대료: {c['rent_monthly']//10000:,}만원<br>"
+                    f"경쟁 점포: {c['competitor_count_300m']}개",
+                    max_width=200,
+                ),
+                tooltip=f"{c['name']} — {surv_pct:.0f}%",
+                icon=folium.Icon(color=colors.get(c["id"], "gray"), icon="store", prefix="fa"),
+            ).add_to(m)
+        st_folium(m, width="100%", height=380, returned_objects=[])
+    except Exception:
+        st.info("지도 표시를 위해 streamlit-folium 패키지가 필요합니다. (pip install streamlit-folium folium)")
 
 # ════════════════════════════════════════════════════════════
 # SECTION 3 — 후보별 상세 탭
 # ════════════════════════════════════════════════════════════
-st.markdown('<div class="kb-section-card">', unsafe_allow_html=True)
-st.header("후보별 상세 분석")
-tabs = st.tabs([f"  {r['candidate_name']}  " for r in all_results])
+with st.container(border=True):
+    st.header("후보별 상세 분석")
+    tabs = st.tabs([f"  {r['candidate_name']}  " for r in all_results])
 
-for tab, r in zip(tabs, all_results):
-    with tab:
-        cand = r["cand"]
-        surv = r["surv"]
-        cost = r["cost_r"]
-        gap  = r["gap_r"]
-        sig  = r["signal_r"]
-        sf   = r["self_fund"]
+    for tab, r in zip(tabs, all_results):
+        with tab:
+            cand = r["cand"]
+            surv = r["surv"]
+            cost = r["cost_r"]
+            gap  = r["gap_r"]
+            sig  = r["signal_r"]
+            sf   = r["self_fund"]
 
-        # 핵심 지표 4개
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("3년 생존 가능성",  f"{surv['survival_3y']*100:.0f}%")
-        c2.metric("예상 월매출",      f"{cand['est_monthly_revenue']//10000:,}만원")
-        c3.metric("총 필요자금",      f"{cost['total_cost']//10000:,}만원")
-        c4.metric("추가 조달 필요액", f"{gap['funding_gap']//10000:,}만원",
-                  delta=f"자기자금 {sf//10000:,}만원",
-                  delta_color="off")
+            # 핵심 지표 4개
+            c1, c2, c3, c4 = st.columns(4)
+            c1.metric("3년 생존 가능성",  f"{surv['survival_3y']*100:.0f}%")
+            c2.metric("예상 월매출",      f"{cand['est_monthly_revenue']//10000:,}만원")
+            c3.metric("총 필요자금",      f"{cost['total_cost']//10000:,}만원")
+            c4.metric("추가 조달 필요액", f"{gap['funding_gap']//10000:,}만원",
+                      delta=f"자기자금 {sf//10000:,}만원",
+                      delta_color="off")
 
-        st.markdown("---")
-
-        left, right = st.columns([1, 1], gap="large")
-
-        with left:
-            # 추천 근거
-            st.markdown("### 추천 근거")
-            for ev in r["evidence"]:
-                css_class = {"good": "evidence-good",
-                             "bad":  "evidence-bad",
-                             "neutral": "evidence-info"}.get(ev["direction"], "evidence-info")
-                icon = {"good": "▲", "bad": "▼", "neutral": "●"}.get(ev["direction"], "●")
-                st.markdown(f"""
-                <div class="{css_class}">
-                  <b>{icon} {ev['item']}</b><br>
-                  <span style="font-size:13px;">{ev['sentence']}</span><br>
-                  <span style="font-size:11px; color:#888;">출처: {ev['data_source']}</span>
-                </div>
-                """, unsafe_allow_html=True)
-
-            st.markdown("<br>", unsafe_allow_html=True)
-
-            # 유사 사례
-            st.markdown("### 유사 사례 통계")
-            cc = r["case_card"]
-            rate_pct = cc["survival_rate_3y"] * 100
-            st.markdown(f"""
-            <div style="background:#F7F8FA; border-radius:10px; padding:16px; border:1px solid #E5E5EA;">
-              <div style="font-size:28px; font-weight:900; color:#1C1C1E;">{rate_pct:.0f}%</div>
-              <div style="font-size:13px; color:#555; margin-bottom:8px;">유사 조건 카페의 3년 생존율</div>
-              <div style="font-size:13px; color:#333;">{cc['summary_sentence']}</div>
-              <div style="font-size:11px; color:#888; margin-top:8px;">
-                필터: {cc['filter_criteria']}<br>출처: {cc['data_source']}
-              </div>
-            </div>
-            """, unsafe_allow_html=True)
-            if cc["sample_warning"]:
-                st.warning(cc["sample_warning_msg"])
-
-        with right:
-            # 비용 구성
-            st.markdown("### 자금 계획")
-            cost_items = list(cost["breakdown"].items())
-            cost_df = pd.DataFrame([
-                {"항목": k, "금액": f"{v//10000:,}만원", "비중": f"{v/cost['total_cost']*100:.0f}%"}
-                for k, v in cost_items
-            ] + [{"항목": "합계", "금액": f"{cost['total_cost']//10000:,}만원", "비중": "100%"}])
-            st.dataframe(cost_df, hide_index=True, use_container_width=True)
-
-            st.markdown(f"""
-            <div style="background:#FFF8E7; border:1px solid #FFB800; border-radius:8px; padding:14px 18px; margin-top:8px; line-height:1.8;">
-              <b style="color:#1C1C1E;">자기자금 {sf//10000:,}만원</b>으로<br>
-              <b style="color:#1C1C1E;">{gap['funding_gap']//10000:,}만원</b> 추가 조달 필요
-            </div>
-            """, unsafe_allow_html=True)
-
-            # 금융상품
-            st.markdown("### 추천 금융상품")
-            if r["products"]:
-                for p in r["products"]:
-                    with st.expander(f"{p['name']}  —  월 {p['monthly_burden']//10000:,}만원"):
-                        st.markdown(f"""
-                        - **제공**: {p['provider']}
-                        - **금리**: {p['rate_min']*100:.2f} ~ {p['rate_max']*100:.2f}%
-                        - **한도**: {p['max_amount']//10000:,}만원 / 기간 {p['tenor_years']}년
-                        - {p['note']}
-                        """)
-            else:
-                st.info("현재 조건에 맞는 금융상품을 찾지 못했습니다. 조달 금액이나 부담 한도를 조정해보세요.")
-
-            # 신호등
-            st.markdown("### 금융부담 신호등")
-            sig_css = {"green": "signal-green", "yellow": "signal-yellow", "red": "signal-red"}.get(sig["signal"], "signal-info")
-            st.markdown(f"""
-            <div class="{sig_css}">
-              {sig['signal_label']} &nbsp; | &nbsp; 예상 월매출 대비 {sig['burden_ratio_pct']:.1f}%
-            </div>
-            <div style="font-size:12px; color:#888; margin-top:6px;">{sig['threshold_info']}</div>
-            """, unsafe_allow_html=True)
-            if sig["user_limit_exceeded"]:
-                st.warning(sig["user_limit_msg"])
-
-        # 스트레스 테스트
-        st.markdown("---")
-        st.markdown("### 스트레스 테스트")
-        st.caption("조건이 나빠지는 상황을 가정해 생존 가능성 변화를 확인합니다.")
-        sc_cols = st.columns(3)
-        scenario_icons = {"금리+1%p": "금리 인상", "임대료+10%": "임대료 상승", "매출-30%": "매출 감소"}
-        for (sc_name, sc_r), col in zip(r["stress"].items(), sc_cols):
-            with col:
-                change = sc_r["survival_change"] * 100
-                if change < 0:
-                    change_str = f"기존보다 {abs(change):.1f}%p 하락"
-                elif change > 0:
-                    change_str = f"기존보다 {abs(change):.1f}%p 상승"
-                else:
-                    change_str = "변화 없음"
-                sig_c = {"green": "#34C759", "yellow": "#FFB800", "red": "#FF3B30"}.get(sc_r["signal"], "#888")
-                st.markdown(f"""
-                <div style="background:#F7F8FA; border:1px solid #E5E5EA; border-radius:10px; padding:16px; text-align:center;">
-                  <div style="font-size:12px; color:#888; margin-bottom:4px;">{scenario_icons.get(sc_name, sc_name)}</div>
-                  <div style="font-size:15px; font-weight:700; color:#1C1C1E;">{sc_name}</div>
-                  <div style="font-size:24px; font-weight:900; color:#1C1C1E; margin:8px 0;">{sc_r['survival_3y']*100:.0f}%</div>
-                  <div style="font-size:12px; color:{'#FF3B30' if change < 0 else '#34C759'};">{change_str}</div>
-                  <div style="margin-top:8px;">
-                    <span style="background:{sig_c}20; color:{sig_c}; border:1px solid {sig_c};
-                                 font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px;">
-                      {sc_r['signal_label']}
-                    </span>
-                  </div>
-                  <div style="font-size:11px; color:#888; margin-top:8px;">{sc_r['cashflow_warning']}</div>
-                </div>
-                """, unsafe_allow_html=True)
-
-        # 조건 경고
-        if r["warnings"]:
             st.markdown("---")
-            for w in r["warnings"]:
-                st.warning(w)
 
-st.markdown('</div>', unsafe_allow_html=True)
+            left, right = st.columns([1, 1], gap="large")
+
+            with left:
+                # 추천 근거
+                st.markdown("### 추천 근거")
+                for ev in r["evidence"]:
+                    css_class = {"good": "evidence-good",
+                                 "bad":  "evidence-bad",
+                                 "neutral": "evidence-info"}.get(ev["direction"], "evidence-info")
+                    icon = {"good": "▲", "bad": "▼", "neutral": "●"}.get(ev["direction"], "●")
+                    st.markdown(f"""
+                    <div class="{css_class}">
+                      <b>{icon} {ev['item']}</b><br>
+                      <span style="font-size:13px;">{ev['sentence']}</span><br>
+                      <span style="font-size:11px; color:#888;">출처: {ev['data_source']}</span>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+                st.markdown("<br>", unsafe_allow_html=True)
+
+                # 유사 사례
+                st.markdown("### 유사 사례 통계")
+                cc = r["case_card"]
+                rate_pct = cc["survival_rate_3y"] * 100
+                st.markdown(f"""
+                <div style="background:#F7F8FA; border-radius:10px; padding:16px; border:1px solid #E5E5EA;">
+                  <div style="font-size:28px; font-weight:900; color:#1C1C1E;">{rate_pct:.0f}%</div>
+                  <div style="font-size:13px; color:#555; margin-bottom:8px;">유사 조건 카페의 3년 생존율</div>
+                  <div style="font-size:13px; color:#333;">{cc['summary_sentence']}</div>
+                  <div style="font-size:11px; color:#888; margin-top:8px;">
+                    필터: {cc['filter_criteria']}<br>출처: {cc['data_source']}
+                  </div>
+                </div>
+                """, unsafe_allow_html=True)
+                if cc["sample_warning"]:
+                    st.warning(cc["sample_warning_msg"])
+
+            with right:
+                # 비용 구성
+                st.markdown("### 자금 계획")
+                cost_items = list(cost["breakdown"].items())
+                cost_df = pd.DataFrame([
+                    {"항목": k, "금액": f"{v//10000:,}만원", "비중": f"{v/cost['total_cost']*100:.0f}%"}
+                    for k, v in cost_items
+                ] + [{"항목": "합계", "금액": f"{cost['total_cost']//10000:,}만원", "비중": "100%"}])
+                st.dataframe(cost_df, hide_index=True, use_container_width=True)
+
+                st.markdown(f"""
+                <div style="background:#FFF8E7; border:1px solid #FFB800; border-radius:8px; padding:14px 18px; margin-top:8px; line-height:1.8;">
+                  <b style="color:#1C1C1E;">자기자금 {sf//10000:,}만원</b>으로<br>
+                  <b style="color:#1C1C1E;">{gap['funding_gap']//10000:,}만원</b> 추가 조달 필요
+                </div>
+                """, unsafe_allow_html=True)
+
+                # 금융상품
+                st.markdown("### 추천 금융상품")
+                if r["products"]:
+                    for p in r["products"]:
+                        with st.expander(f"{p['name']}  —  월 {p['monthly_burden']//10000:,}만원"):
+                            st.markdown(f"""
+                            - **제공**: {p['provider']}
+                            - **금리**: {p['rate_min']*100:.2f} ~ {p['rate_max']*100:.2f}%
+                            - **한도**: {p['max_amount']//10000:,}만원 / 기간 {p['tenor_years']}년
+                            - {p['note']}
+                            """)
+                else:
+                    st.info("현재 조건에 맞는 금융상품을 찾지 못했습니다. 조달 금액이나 부담 한도를 조정해보세요.")
+
+                # 신호등
+                st.markdown("### 금융부담 신호등")
+                sig_css = {"green": "signal-green", "yellow": "signal-yellow", "red": "signal-red"}.get(sig["signal"], "signal-info")
+                st.markdown(f"""
+                <div class="{sig_css}">
+                  {sig['signal_label']} &nbsp; | &nbsp; 예상 월매출 대비 {sig['burden_ratio_pct']:.1f}%
+                </div>
+                <div style="font-size:12px; color:#888; margin-top:6px;">{sig['threshold_info']}</div>
+                """, unsafe_allow_html=True)
+                if sig["user_limit_exceeded"]:
+                    st.warning(sig["user_limit_msg"])
+
+            # 스트레스 테스트
+            st.markdown("---")
+            st.markdown("### 스트레스 테스트")
+            st.caption("조건이 나빠지는 상황을 가정해 생존 가능성 변화를 확인합니다.")
+            sc_cols = st.columns(3)
+            scenario_icons = {"금리+1%p": "금리 인상", "임대료+10%": "임대료 상승", "매출-30%": "매출 감소"}
+            for (sc_name, sc_r), col in zip(r["stress"].items(), sc_cols):
+                with col:
+                    change = sc_r["survival_change"] * 100
+                    if change < 0:
+                        change_str = f"기존보다 {abs(change):.1f}%p 하락"
+                    elif change > 0:
+                        change_str = f"기존보다 {abs(change):.1f}%p 상승"
+                    else:
+                        change_str = "변화 없음"
+                    sig_c = {"green": "#34C759", "yellow": "#FFB800", "red": "#FF3B30"}.get(sc_r["signal"], "#888")
+                    st.markdown(f"""
+                    <div style="background:#F7F8FA; border:1px solid #E5E5EA; border-radius:10px; padding:16px; text-align:center;">
+                      <div style="font-size:12px; color:#888; margin-bottom:4px;">{scenario_icons.get(sc_name, sc_name)}</div>
+                      <div style="font-size:15px; font-weight:700; color:#1C1C1E;">{sc_name}</div>
+                      <div style="font-size:24px; font-weight:900; color:#1C1C1E; margin:8px 0;">{sc_r['survival_3y']*100:.0f}%</div>
+                      <div style="font-size:12px; color:{'#FF3B30' if change < 0 else '#34C759'};">{change_str}</div>
+                      <div style="margin-top:8px;">
+                        <span style="background:{sig_c}20; color:{sig_c}; border:1px solid {sig_c};
+                                     font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px;">
+                          {sc_r['signal_label']}
+                        </span>
+                      </div>
+                      <div style="font-size:11px; color:#888; margin-top:8px;">{sc_r['cashflow_warning']}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+            # 조건 경고
+            if r["warnings"]:
+                st.markdown("---")
+                for w in r["warnings"]:
+                    st.warning(w)
 
 # ════════════════════════════════════════════════════════════
 # SECTION 4 — 지표 비교 + 최종 추천
 # ════════════════════════════════════════════════════════════
-st.markdown('<div class="kb-section-card">', unsafe_allow_html=True)
-st.header("종합 비교 · 최종 추천")
+with st.container(border=True):
+    st.header("종합 비교 · 최종 추천")
 
-chart_col, rec_col = st.columns([1, 1], gap="large")
+    chart_col, rec_col = st.columns([1, 1], gap="large")
 
-with chart_col:
-    st.markdown("##### 항목별 지표 비교")
-    radar_cats = ["안정성", "수익성", "금융\n실행가능성", "선호\n적합성"]
-    colors_radar = ["#FFB800", "#1C1C1E", "#34C759"]
-    fig = go.Figure()
-    for r, color in zip(all_results, colors_radar):
-        s = r["scores"]
-        vals = [s["stability_score"], s["profitability_score"],
-                s["financial_score"],  s["preference_score"]]
-        vals.append(vals[0])
-        fig.add_trace(go.Scatterpolar(
-            r=vals,
-            theta=radar_cats + [radar_cats[0]],
-            name=r["candidate_name"],
-            fill="toself",
-            line_color=color,
-            fillcolor=color,
-            opacity=0.3,
-        ))
-    fig.update_layout(
-        polar=dict(radialaxis=dict(visible=True, range=[0, 100], tickfont=dict(size=10))),
-        showlegend=True,
-        legend=dict(orientation="h", x=0.5, y=-0.15, xanchor="center", font=dict(size=12)),
-        height=380,
-        margin=dict(t=30, b=80, l=30, r=30),
-        paper_bgcolor="rgba(0,0,0,0)",
-    )
-    st.plotly_chart(fig, use_container_width=True)
+    with chart_col:
+        st.markdown("##### 항목별 지표 비교")
+        radar_cats = ["안정성", "수익성", "금융\n실행가능성", "선호\n적합성"]
+        colors_radar = ["#FFB800", "#1C1C1E", "#34C759"]
+        fig = go.Figure()
+        for r, color in zip(all_results, colors_radar):
+            s = r["scores"]
+            vals = [s["stability_score"], s["profitability_score"],
+                    s["financial_score"],  s["preference_score"]]
+            vals.append(vals[0])
+            fig.add_trace(go.Scatterpolar(
+                r=vals,
+                theta=radar_cats + [radar_cats[0]],
+                name=r["candidate_name"],
+                fill="toself",
+                line_color=color,
+                fillcolor=color,
+                opacity=0.3,
+            ))
+        fig.update_layout(
+            polar=dict(radialaxis=dict(visible=True, range=[0, 100], tickfont=dict(size=10))),
+            showlegend=True,
+            legend=dict(orientation="h", x=0.5, y=-0.15, xanchor="center", font=dict(size=12)),
+            height=380,
+            margin=dict(t=30, b=80, l=30, r=30),
+            paper_bgcolor="rgba(0,0,0,0)",
+        )
+        st.plotly_chart(fig, use_container_width=True)
 
-    # 점수 표
-    score_df = pd.DataFrame([{
-        "후보":       r["candidate_name"],
-        "생존확률":   f"{r['surv']['survival_3y']*100:.0f}%",
-        "안정성":     f"{r['scores']['stability_score']:.0f}",
-        "수익성":     f"{r['scores']['profitability_score']:.0f}",
-        "금융가능성": f"{r['scores']['financial_score']:.0f}",
-        "선호적합":   f"{r['scores']['preference_score']:.0f}",
-        "종합":       f"{r['composite_balanced']:.0f}",
-    } for r in all_results])
-    st.dataframe(score_df, hide_index=True, use_container_width=True)
+        # 점수 표
+        score_df = pd.DataFrame([{
+            "후보":       r["candidate_name"],
+            "생존확률":   f"{r['surv']['survival_3y']*100:.0f}%",
+            "안정성":     f"{r['scores']['stability_score']:.0f}",
+            "수익성":     f"{r['scores']['profitability_score']:.0f}",
+            "금융가능성": f"{r['scores']['financial_score']:.0f}",
+            "선호적합":   f"{r['scores']['preference_score']:.0f}",
+            "종합":       f"{r['composite_balanced']:.0f}",
+        } for r in all_results])
+        st.dataframe(score_df, hide_index=True, use_container_width=True)
 
-with rec_col:
-    st.markdown("##### 목적별 최종 추천")
-    rec_types = [
-        ("balanced", "균형형 추천",  "#FFB800", "#1C1C1E", "안정성·수익성·금융부담 균형이 가장 우수합니다"),
-        ("growth",   "성장형 추천",  "#1C1C1E", "#FFFFFF", "수익성과 유동인구 잠재력이 높은 입지"),
-        ("stable",   "안정형 추천",  "#F0F0F0", "#1C1C1E", "생존 가능성과 자금 안정성이 높은 입지"),
-    ]
-    for key, label, bg, fg, desc in rec_types:
-        rec = final_rec[key]
-        name = rec["candidate"]
-        st.markdown(f"""
-        <div style="background:{bg}; color:{fg}; border-radius:10px; padding:18px 20px; margin-bottom:12px;">
-          <div style="font-size:12px; opacity:0.7; margin-bottom:4px;">{label}</div>
-          <div style="font-size:20px; font-weight:800; margin-bottom:4px;">{name}</div>
-          <div style="font-size:13px; opacity:0.85;">{desc}</div>
+    with rec_col:
+        st.markdown("##### 목적별 최종 추천")
+        rec_types = [
+            ("balanced", "균형형 추천",  "#FFB800", "#1C1C1E", "안정성·수익성·금융부담 균형이 가장 우수합니다"),
+            ("growth",   "성장형 추천",  "#1C1C1E", "#FFFFFF", "수익성과 유동인구 잠재력이 높은 입지"),
+            ("stable",   "안정형 추천",  "#F0F0F0", "#1C1C1E", "생존 가능성과 자금 안정성이 높은 입지"),
+        ]
+        for key, label, bg, fg, desc in rec_types:
+            rec = final_rec[key]
+            name = rec["candidate"]
+            st.markdown(f"""
+            <div style="background:{bg}; color:{fg}; border-radius:10px; padding:18px 20px; margin-bottom:12px;">
+              <div style="font-size:12px; opacity:0.7; margin-bottom:4px;">{label}</div>
+              <div style="font-size:20px; font-weight:800; margin-bottom:4px;">{name}</div>
+              <div style="font-size:13px; opacity:0.85;">{desc}</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("""
+        <div style="background:#F7F8FA; border-radius:8px; padding:14px 16px; font-size:12px; color:#888; line-height:1.8;">
+          <b style="color:#555;">유의사항</b><br>
+          본 서비스는 과거 데이터 기반의 통계적 참고 정보입니다.<br>
+          개별 사업자의 성공을 보장하지 않으며, 금융상품 가입 확정 안내가 아닙니다.<br>
+          실제 대출 승인은 금융기관 별도 심사에 따릅니다.
         </div>
         """, unsafe_allow_html=True)
-
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown("""
-    <div style="background:#F7F8FA; border-radius:8px; padding:14px 16px; font-size:12px; color:#888; line-height:1.8;">
-      <b style="color:#555;">유의사항</b><br>
-      본 서비스는 과거 데이터 기반의 통계적 참고 정보입니다.<br>
-      개별 사업자의 성공을 보장하지 않으며, 금융상품 가입 확정 안내가 아닙니다.<br>
-      실제 대출 승인은 금융기관 별도 심사에 따릅니다.
-    </div>
-    """, unsafe_allow_html=True)
-
-st.markdown('</div>', unsafe_allow_html=True)
