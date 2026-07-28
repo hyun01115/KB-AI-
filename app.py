@@ -34,6 +34,11 @@ st.markdown("""
 <style>
 /* ===== 0. 전역 폰트 — 크기는 텍스트 요소에만, div/span은 건드리지 않음 ===== */
 * { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif !important; box-sizing: border-box !important; }
+/* 아이콘 폰트는 예외 (화살표 등이 글자로 깨지는 것 방지) */
+[data-testid="stIconMaterial"], .material-symbols-rounded {
+    font-family: 'Material Symbols Rounded' !important;
+}
+.material-symbols-outlined { font-family: 'Material Symbols Outlined' !important; }
 html, body, .stApp { font-size: 17px; }
 .stMarkdown p, .stMarkdown li, td, th, label { font-size: 17px; }
 .stMarkdown div, .stMarkdown p { word-break: keep-all; overflow-wrap: break-word; text-align: left; }
@@ -647,10 +652,12 @@ with st.container(border=True):
 
         st.markdown("<br>", unsafe_allow_html=True)
         st.markdown("""
-        <div style="background:#F7F8FA; border-radius:8px; padding:16px 20px; font-size:14px; color:#888; line-height:1.8;">
+        <div style="background:#F7F8FA; border-radius:8px; padding:16px 20px; margin-bottom:24px;
+                    font-size:14px; color:#888; line-height:1.8; width:100%;">
           <b style="color:#555;">유의사항</b><br>
           본 서비스는 과거 데이터 기반의 통계적 참고 정보입니다.<br>
           개별 사업자의 성공을 보장하지 않으며, 금융상품 가입 확정 안내가 아닙니다.<br>
           실제 대출 승인은 금융기관 별도 심사에 따릅니다.
         </div>
+        <div style="height:8px;"></div>
         """, unsafe_allow_html=True)
