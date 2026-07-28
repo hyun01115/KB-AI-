@@ -275,7 +275,7 @@ if not st.session_state.results_ready:
     """, unsafe_allow_html=True)
     st.stop()
 
-all_results = st.session_state.all_results
+all_results = sorted(st.session_state.all_results, key=lambda r: r["surv"]["stability_rank"])
 final_rec   = build_final_recommendation(all_results)
 
 # ════════════════════════════════════════════════════════════
@@ -291,8 +291,10 @@ for i, r in enumerate(all_results):
         rank     = r["surv"]["stability_rank"]
         border   = "2px solid #FFB800" if rank == 1 else "1px solid #E5E5EA"
         sig      = r["signal_r"]["signal"]
-        sig_color = {"green": "#34C759", "yellow": "#FFB800", "red": "#FF3B30"}.get(sig, "#888")
-        sig_text  = {"green": "금융부담 안전", "yellow": "금융부담 주의", "red": "금융부담 위험"}.get(sig, "")
+        # 예산 초과 경고가 있으면 신호등을 최소 yellow로 표시
+        display_sig = sig if not r["warnings"] else ("yellow" if sig == "green" else sig)
+        sig_color = {"green": "#34C759", "yellow": "#FFB800", "red": "#FF3B30"}.get(display_sig, "#888")
+        sig_text  = {"green": "금융부담 안전", "yellow": "금융부담 주의", "red": "금융부담 위험"}.get(display_sig, "")
         st.markdown(f"""
         <div style="background:#FFF; border:{border}; border-radius:12px;
                     padding:20px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.07);">
@@ -308,7 +310,7 @@ for i, r in enumerate(all_results):
               {sig_text}
             </span>
           </div>
-          {"<div style='margin-top:10px; font-size:11px; color:#FF3B30;'>⚠ 예산 초과 — 조정 필요</div>" if r['warnings'] else ""}
+          {"<div style='margin-top:8px; font-size:11px; color:#FF6B00;'>예산 조건 확인 필요</div>" if r['warnings'] else ""}
         </div>
         """, unsafe_allow_html=True)
 
@@ -413,8 +415,8 @@ for tab, r in zip(tabs, all_results):
             st.dataframe(cost_df, hide_index=True, use_container_width=True)
 
             st.markdown(f"""
-            <div style="background:#FFF8E7; border:1px solid #FFB800; border-radius:8px; padding:12px 16px; margin-top:8px;">
-              <b style="color:#1C1C1E;">자기자금 {sf//10000:,}만원</b> 으로
+            <div style="background:#FFF8E7; border:1px solid #FFB800; border-radius:8px; padding:14px 18px; margin-top:8px; line-height:1.8;">
+              <b style="color:#1C1C1E;">자기자금 {sf//10000:,}만원</b>으로<br>
               <b style="color:#1C1C1E;">{gap['funding_gap']//10000:,}만원</b> 추가 조달 필요
             </div>
             """, unsafe_allow_html=True)
@@ -454,7 +456,12 @@ for tab, r in zip(tabs, all_results):
         for (sc_name, sc_r), col in zip(r["stress"].items(), sc_cols):
             with col:
                 change = sc_r["survival_change"] * 100
-                change_str = f"{change:+.1f}%p"
+                if change < 0:
+                    change_str = f"기존보다 {abs(change):.1f}%p 하락"
+                elif change > 0:
+                    change_str = f"기존보다 {abs(change):.1f}%p 상승"
+                else:
+                    change_str = "변화 없음"
                 sig_c = {"green": "#34C759", "yellow": "#FFB800", "red": "#FF3B30"}.get(sc_r["signal"], "#888")
                 st.markdown(f"""
                 <div style="background:#F7F8FA; border:1px solid #E5E5EA; border-radius:10px; padding:16px; text-align:center;">
@@ -507,8 +514,9 @@ with chart_col:
     fig.update_layout(
         polar=dict(radialaxis=dict(visible=True, range=[0, 100], tickfont=dict(size=10))),
         showlegend=True,
-        height=340,
-        margin=dict(t=20, b=20, l=20, r=20),
+        legend=dict(orientation="h", x=0.5, y=-0.15, xanchor="center", font=dict(size=12)),
+        height=380,
+        margin=dict(t=20, b=60, l=20, r=20),
         paper_bgcolor="rgba(0,0,0,0)",
     )
     st.plotly_chart(fig, use_container_width=True)
