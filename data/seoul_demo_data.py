@@ -1143,7 +1143,7 @@ SEOUL_CANDIDATES: dict[str, list[dict]] = {
 # 각 구 × 후보별 유사 사례 (공공데이터포털 지방행정 인허가 데이터 기반)
 SEOUL_SIMILAR_CASES: dict[str, dict[str, dict]] = {}
 
-def _gen_cases(gu: str, candidates: list[dict]) -> dict[str, dict]:
+def _gen_cases(gu: str, candidates: list[dict], category: str = "카페") -> dict[str, dict]:
     """후보 데이터로부터 유사 사례 통계를 자동 생성"""
     cases = {}
     for c in candidates:
@@ -1161,7 +1161,7 @@ def _gen_cases(gu: str, candidates: list[dict]) -> dict[str, dict]:
             "total_similar": total,
             "survived_3y": survived,
             "survival_rate_3y": rate,
-            "filter_criteria": f"{gu} / 카페 / 보증금 {dep_lo}~{dep_hi}만 / 면적 {area_lo}~{area_hi}㎡",
+            "filter_criteria": f"{gu} / {category} / 보증금 {dep_lo}~{dep_hi}만 / 면적 {area_lo}~{area_hi}㎡",
             "sample_warning": total < 30,
         }
     return cases
@@ -1188,8 +1188,10 @@ def get_candidate_by_id(cid: str, gu: str = "마포구") -> dict | None:
     return next((c for c in cands if c["id"] == cid), None)
 
 
-def get_similar_cases(cid: str, gu: str = "마포구") -> dict:
-    return SEOUL_SIMILAR_CASES.get(gu, {}).get(cid, {})
+def get_similar_cases(cid: str, gu: str = "마포구", category: str = "카페") -> dict:
+    cands = SEOUL_CANDIDATES.get(gu, SEOUL_CANDIDATES["마포구"])
+    cases = _gen_cases(gu, cands, category)
+    return cases.get(cid, {})
 
 
 def get_map_center(gu: str = "마포구") -> tuple[float, float]:

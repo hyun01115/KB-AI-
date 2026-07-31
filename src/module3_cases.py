@@ -6,7 +6,7 @@ from __future__ import annotations
 from config.settings import SURVIVAL_MIN_SAMPLE
 
 
-def generate_similar_case_card(cases: dict, candidate_name: str) -> dict:
+def generate_similar_case_card(cases: dict, candidate_name: str, category: str = "카페") -> dict:
     """
     유사 사례 통계 카드 생성
 
@@ -33,7 +33,7 @@ def generate_similar_case_card(cases: dict, candidate_name: str) -> dict:
     rate_pct = round(rate * 100, 1)
     if total > 0:
         sentence = (
-            f"'{candidate_name}'과 조건이 비슷한 카페 {total}곳 중 "
+            f"'{candidate_name}'과 조건이 비슷한 {category} {total}곳 중 "
             f"{survived}곳({rate_pct}%)이 3년 이상 영업을 지속했습니다."
         )
     else:

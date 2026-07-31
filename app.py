@@ -302,7 +302,7 @@ if run_btn:
         for cand in candidates:
             cid       = cand["id"]
             surv      = surv_map[cid]
-            cases_raw = get_similar_cases(cid, region)
+            cases_raw = get_similar_cases(cid, region, category)
             cost_r    = compute_total_cost(cand)
             gap_r     = compute_funding_gap(cost_r, self_fund)
             products  = match_financial_products(gap_r["funding_gap"], max_burden)
@@ -310,7 +310,7 @@ if run_btn:
             signal_r  = compute_burden_signal(cand["est_monthly_revenue"],
                                                combined["total_monthly"], max_burden)
             evidence  = generate_evidence_cards(cand, surv, category)
-            case_card = generate_similar_case_card(cases_raw, cand["name"])
+            case_card = generate_similar_case_card(cases_raw, cand["name"], category)
             warnings  = check_condition_warnings(cand, gap_r, user_prefs)
             scores    = compute_individual_scores(cand, surv, cost_r, gap_r, signal_r,
                                                   surv_results, user_prefs)
@@ -516,7 +516,7 @@ with st.container(border=True):
                 st.markdown(f"""
                 <div style="background:#F7F8FA; border-radius:12px; padding:24px; border:1px solid #E5E5EA;">
                   <div style="font-size:40px; font-weight:800; color:#1C1C1E; margin-bottom:4px;">{rate_pct:.0f}%</div>
-                  <div style="font-size:16px; color:#777; margin-bottom:12px;">유사 조건 카페의 3년 생존율</div>
+                  <div style="font-size:16px; color:#777; margin-bottom:12px;">유사 조건 {r['category']}의 3년 생존율</div>
                   <div style="font-size:17px; color:#333; line-height:1.7;">{cc['summary_sentence']}</div>
                   <div style="font-size:14px; color:#999; margin-top:10px;">
                     필터: {cc['filter_criteria']}<br>출처: {cc['data_source']}
